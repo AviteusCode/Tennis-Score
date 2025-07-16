@@ -11,7 +11,7 @@ import org.tennis.model.Score;
 public class TennisScoreService {
   private static final Pattern GAME_PATTERN = Pattern.compile("^[AB]+$");
 
-  private static Logger log = LogManager.getLogger(TennisScoreService.class);
+  private static final Logger log = LogManager.getLogger(TennisScoreService.class);
 
   public void computeScore(String input) {
     try {
@@ -65,7 +65,7 @@ public class TennisScoreService {
       return;
     }
 
-    if (playerAScore == Score.FOURTY && playerBScore == Score.FOURTY) {
+    if (playerAScore == Score.FORTY && playerBScore == Score.FORTY) {
       log.info("Deuce");
       return;
     }
@@ -91,19 +91,20 @@ public class TennisScoreService {
     return switch (winnerScore) {
       case ZERO -> new Pair<>(Score.FIFTEEN, looserScore);
       case FIFTEEN -> new Pair<>(Score.THIRTY, looserScore);
-      case THIRTY -> new Pair<>(Score.FOURTY, looserScore);
-      case FOURTY -> calcuteScoreWhenWinnerIsAtFourty(looserScore);
+      case THIRTY -> new Pair<>(Score.FORTY, looserScore);
+      case FORTY -> calculateScoreWhenWinnerIsAtForty(looserScore);
       case ADVANTAGE -> new Pair<>(Score.WIN, looserScore);
       case WIN ->
           throw new InvalidParameterException("game should be over but still getting input");
     };
   }
 
-  private Pair<Score, Score> calcuteScoreWhenWinnerIsAtFourty(Score looserScore) {
+  private Pair<Score, Score> calculateScoreWhenWinnerIsAtForty(Score looserScore) {
     if (looserScore == Score.ADVANTAGE) {
-      return new Pair<>(Score.FOURTY, Score.FOURTY);
-    } else if (looserScore == Score.FOURTY) {
+      return new Pair<>(Score.FORTY, Score.FORTY);
+    } else if (looserScore == Score.FORTY) {
       return new Pair<>(Score.ADVANTAGE, looserScore);
+
     } else {
       return new Pair<>(Score.WIN, looserScore);
     }
